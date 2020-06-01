@@ -11,6 +11,7 @@ import { History } from 'history';
 import { Route, Switch } from 'react-router';
 import NotFound from './components/NotFound';
 import Pending from './components/Pending'
+import HookedSearch from './components/Search/HookedSearch';
 
 type State = {
     showCurrentMovie: boolean;
@@ -69,7 +70,7 @@ class App extends Component<Props, State> {
                 if(this.props.pending) {
                         return (
                             <>
-                                <Search filterOptions = {['title', 'genres']} />
+                                <HookedSearch filterOptions = {['title', 'genres']} />
                                 <Pending />
                             </>
                         )
@@ -77,7 +78,7 @@ class App extends Component<Props, State> {
                 else {
                     return (
                         <>
-                            <Search filterOptions = {['title', 'genres']} />
+                            <HookedSearch filterOptions = {['title', 'genres']} />
                             <NotFound />
                         </>
                     )
@@ -86,7 +87,7 @@ class App extends Component<Props, State> {
             else {
                 return (
                     <>
-                        <Search filterOptions = {['title', 'genres']} />
+                        <HookedSearch filterOptions = {['title', 'genres']} />
                         <SearchResult movies = {this.props.fetchedMovies} action = {(movie: Movie) => this.handleSelectMovie(movie)}/>
                     </>
                 );
@@ -98,7 +99,7 @@ class App extends Component<Props, State> {
                 <ConnectedRouter history={this.props.history}>
                     <Switch>
                         <Route exact path="/" >
-                            <Search filterOptions = {['title', 'genres']} />
+                            <HookedSearch filterOptions = {['title', 'genres']} />
                             <NotFound />
                         </Route>
                         <Route path= "/search/">
@@ -108,7 +109,7 @@ class App extends Component<Props, State> {
                             {getResult()}
                         </Route>
                         <Route path="*" >
-                            <Search filterOptions = {['title', 'genres']} />
+                            <HookedSearch filterOptions = {['title', 'genres']} />
                             <NotFound />
                         </Route>
                     </Switch>
