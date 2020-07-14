@@ -1,6 +1,6 @@
 import { SetSearchFilter, SetSearchInput } from '../actions/setSearchQuery';
 import { ActionTypes } from '../constants/Constants';
-import { Reducer } from 'react';
+import { Reducer } from 'redux';
 import { SearchQuery } from '../typings/types';
 
 type Action = SetSearchInput | SetSearchFilter;
@@ -9,7 +9,7 @@ const initialState: SearchQuery = {
 	filterOption: '',
 };
 
-export const SetQuery: Reducer<SearchQuery, Action> = (state = initialState, action: Action) => {
+export const setQuery: Reducer<SearchQuery, Action> = (state = initialState, action: Action) => {
 	switch (action.type) {
 		case ActionTypes.SET_SEARCH_INPUT:
 			return {

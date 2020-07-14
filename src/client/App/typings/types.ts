@@ -26,6 +26,7 @@ export type MappedMoviesData = {
 
 export type Movie = {
 	action?: (e: Movie) => void
+	id?: number
 	key?: number
 	title: string
 	genres: string[]
@@ -45,9 +46,11 @@ export type FetchMoviesState = {
 	movies: Movie[]
 	pending: boolean
 };
+export type CurrentMovie = Movie | null;
 
 export interface AppState {
 	fetchMovies: FetchMoviesState
 	searchQuery: SearchQuery
 	showCurrentMovie: boolean
+	currentMovie: CurrentMovie
 }

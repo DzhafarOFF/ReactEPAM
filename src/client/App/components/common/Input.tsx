@@ -1,22 +1,21 @@
-import React from 'react';
 import './Input.scss';
+import React from 'react';
 
 type Props = {
-    type: string;
-    changeAction: (e: React.ChangeEvent) => void;
-    submitAction: (e: React.KeyboardEvent) => void;
-    placeholder?: string;
-}
+	type: string
+	changeAction?: (e: React.ChangeEvent) => void
+	submitAction: (e: React.KeyboardEvent) => void
+	placeholder?: string
+};
 
-const Input = (props: Props) => {
-    return (
-        <input
-            className = 'input'
-            type = {props.type}
-            onKeyUp = {props.submitAction}
-            onChange = {props.changeAction}
-        />
-    )
-}
+const Input: React.FC<Props> = (props: Props) =>
+	<input
+		className = 'input'
+		type = {props.type}
+		onKeyUp = {props.submitAction}
+		onChange = {props.changeAction}
+	/>
+;
+
 
 export default Input;

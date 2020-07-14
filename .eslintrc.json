@@ -94,7 +94,7 @@
 		"sort-imports": "error", // enforce sorted import declarations within modules
 		"template-curly-spacing": "error", // require or disallow spacing around embedded expressions of template strings
 
-		"promise/prefer-await-to-then": "error", // refer await to then() for reading Promise values,
+		// "promise/prefer-await-to-then": "error", // refer await to then() for reading Promise values,
 		// TODO: Waiting this rule to be fixed
 		// "promise/prefer-await-to-callbacks": "error", // Prefer async/await to the callback pattern
 		// https://github.com/xjamundx/eslint-plugin-promise/issues/175

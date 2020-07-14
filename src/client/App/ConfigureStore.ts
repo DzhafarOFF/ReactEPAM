@@ -1,14 +1,15 @@
-import { applyMiddleware, createStore } from 'redux';
-import { createBrowserHistory, createMemoryHistory } from 'history';
+import { Store, applyMiddleware, createStore } from 'redux';
+import { removeCurrentMovie, setCurrentMovie } from './actions/setCurrentMovie';
 import { AppState } from './typings/types';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import isBrowser from 'is-browser';
-import root from './reducers/rootReducer';
-import { routerMiddleware } from 'connected-react-router';
+import createRootReduces from './reducers/rootReducer';
+import { fetchMoviesPending } from './actions/fetchMoviesPending';
+import { fetchMoviesSuccess } from './actions/fetchMoviesSuccess';
+import { getMovies } from './thunkAction/getMovies';
+import { setSearchFilter } from './actions/setSearchQuery';
 import thunk from 'redux-thunk';
 
-export const history = isBrowser ? createBrowserHistory() : createMemoryHistory();
-
+const actionCreators = [fetchMoviesPending, fetchMoviesSuccess, setCurrentMovie, removeCurrentMovie, setSearchFilter, setSearchFilter, getMovies];
 declare global {
 	interface Window {
 		__PRELOADED_STATE__: AppState
@@ -19,6 +20,15 @@ if (typeof window !== 'undefined') {
 	state = window.__PRELOADED_STATE__;
 	delete window.__PRELOADED_STATE__;
 }
-export function configureStore() {
-	return createStore(root(history), state, composeWithDevTools(applyMiddleware(thunk, routerMiddleware(history))));
-}
+const composeEnhancers = composeWithDevTools({
+	actionCreators,
+	trace: true,
+	traceLimit: 25,
+});
+export const configureStore = (): Store => createStore(
+	createRootReduces(),
+	state,
+	composeEnhancers(
+		applyMiddleware(thunk)
+	)
+);

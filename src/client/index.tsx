@@ -1,14 +1,18 @@
+import App from './App/App';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App/App';
-import { Provider } from "react-redux";
-import { configureStore, history } from './App/ConfigureStore';
+import { configureStore } from './App/ConfigureStore';
 
 const store = configureStore();
-export const Root = () => (
-  <Provider store={store}>
-    <App history={history}/>
-  </Provider>
-);
 
-ReactDOM.hydrate(<Root />, document.getElementById("root"));
+export const Root: React.FC = () =>
+	<Provider store={store}>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</Provider>
+;
+
+ReactDOM.render(<Root />, document.getElementById('root'));

@@ -3,7 +3,7 @@ import { FetchMoviesError } from '../actions/fetchMoviesError';
 import { FetchMoviesPending } from '../actions/fetchMoviesPending';
 import { FetchMoviesState } from '../typings/types';
 import { FetchMoviesSuccess } from '../actions/fetchMoviesSuccess';
-import { Reducer } from 'react';
+import { Reducer } from 'redux';
 
 const initialState: FetchMoviesState = {
 	movies: [],
@@ -12,7 +12,7 @@ const initialState: FetchMoviesState = {
 
 type Action = FetchMoviesSuccess | FetchMoviesError | FetchMoviesPending;
 
-export const FetchMovies: Reducer<FetchMoviesState, Action> = (state = initialState, action: Action) => {
+export const fetchMovies: Reducer<FetchMoviesState, Action> = (state = initialState, action: Action) => {
 	switch (action.type) {
 		case ActionTypes.FETCH_MOVIES_SUCCESS:
 			return {
