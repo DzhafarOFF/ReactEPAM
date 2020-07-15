@@ -2,7 +2,7 @@ body{margin:0;padding:0}.App{margin:0 auto;background-color:#fefefe;color:#13131
 
 .not-found{height:70vh;display:flex;justify-content:center;align-items:center;font-size:5rem}
 
-.search{padding:20px;margin:0 auto;display:flex;flex-direction:column;max-width:1140px;color:#fefefe}.search-container{background-image:url(/images/c2303804745fd73c87267fc4568af562.jpg);background-size:cover;background-color:#404040;background-blend-mode:overlay}.search-title{text-decoration:none;color:#f95b63}.search-filter-container{width:100%;display:flex;justify-content:space-between}
+.search{padding:20px;margin:0 auto;display:flex;flex-direction:column;max-width:1140px;color:#fefefe}.search-container{background-image:url(../images/c2303804745fd73c87267fc4568af562.jpg);background-size:cover;background-color:#404040;background-blend-mode:overlay}.search-title{text-decoration:none;color:#f95b63}.search-filter-container{width:100%;display:flex;justify-content:space-between}
 
 .button{margin:10px 0 10px 10px;padding:10px;background-color:#E54B4B;color:#fefefe;border:0;border-radius:5%;text-transform:uppercase;font-weight:bolder;transition:0.2s;cursor:pointer}button:hover{background-color:#e86161}.button:disabled{background-color:grey}
 
