@@ -1,11 +1,11 @@
+import './NotFound.scss';
 import React from 'react';
-import './NotFound.scss'
-const Pending = () => {
-    return (
-        <div className = 'not-found'>
-            Please wait...
-        </div>
-    );
-}
+
+const Pending: React.FC = () =>
+	<div className = 'not-found'>
+		{ 'Please wait...' }
+	</div>
+;
+
 
 export default Pending;

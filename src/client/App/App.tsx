@@ -1,133 +1,98 @@
-import React, { Component } from 'react';
-import Search from './components/Search/Search';
 import './App.scss';
-import SearchResult from './components/SearchResult/SearchResult';
-import { Movie } from './components/SearchResult/types';
-import ShowMovieInfo from './components/SearchResult/ShowMovieInfo';
-import { connect } from 'react-redux'
-import { AppState} from './typings/types';
-import { ConnectedRouter, push } from 'connected-react-router';
-import { History } from 'history';
-import { Route, Switch } from 'react-router';
+import { Redirect, Route, Switch, useHistory } from 'react-router';
+import { TypedUseSelectorHook, useSelector } from 'react-redux';
+import { AppState } from './typings/types';
 import NotFound from './components/NotFound';
-import Pending from './components/Pending'
+import Pending from './components/Pending';
+import React from 'react';
+import Search from './components/Search/Search';
+import SearchResult from './components/SearchResult/SearchResult';
+import { SessionStorageKeys } from './constants/Constants';
+import ShowMovieInfo from './components/SearchResult/ShowMovieInfo';
 
-type State = {
-    showCurrentMovie: boolean;
-    currentMovie?: Movie;
-}
 
-type Props = {
-    fetchedMovies: Movie[];
-    history: History;
-    pending: boolean;
-}
+const typedSelectorHook: TypedUseSelectorHook<AppState> = useSelector;
+const App: React.FC = () => {
+	const appHistory = useHistory();
+	const searchPathFragment = /search\/(.*)/.exec(appHistory.location.pathname);
+	const searchQueryPosition = 1;
+	const searchQuery = searchPathFragment && searchPathFragment[searchQueryPosition];
+	const lastSearch = sessionStorage.getItem(SessionStorageKeys.LAST_SEARCH);
 
-class App extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            showCurrentMovie: false,
-        }
-    }
+	const store = typedSelectorHook(appStore => ({
+		fetchedMovies: appStore.fetchMovies.movies,
+		pending: appStore.fetchMovies.pending,
+		currentMovie: appStore.currentMovie,
+	}));
 
-    handleSelectMovie = (movie: Movie) => {
-        this.setState({
-            showCurrentMovie: true,
-            currentMovie: movie
-        });
-    }
+	return (
+		<div className = 'App'>
 
-    handleSelectSearch = () => {
-        this.setState({
-            showCurrentMovie: false,
-        });
-    }
-    
-    render() {
-        const getResult = () => {
-            if (this.state.currentMovie) {
-                return (
-                    <Route path={`/films/${this.state.currentMovie.id}`} >
-                        <ShowMovieInfo
-                            key = {this.state.currentMovie.id}
-                            id = {this.state.currentMovie.id}
-                            title = {this.state.currentMovie.title}
-                            genres = {this.state.currentMovie.genres}
-                            releaseDate = {this.state.currentMovie.releaseDate}
-                            imageURL = {this.state.currentMovie.imageURL}
-                            rating = {this.state.currentMovie.rating}
-                            description = {this.state.currentMovie.description}
-                            action = {() => this.handleSelectSearch()}
-                            runtime = {this.state.currentMovie.runtime}
-                        />
-                        <SearchResult movies = {this.props.fetchedMovies} action = {(movie: Movie) => this.handleSelectMovie(movie)}/>
-                    </Route>
-                )
-            }
-            else if (this.props.fetchedMovies.length === 0) {
-                if(this.props.pending) {
-                        return (
-                            <>
-                                <Search filterOptions = {['title', 'genres']} />
-                                <Pending />
-                            </>
-                        )
-                } 
-                else {
-                    return (
-                        <>
-                            <Search filterOptions = {['title', 'genres']} />
-                            <NotFound />
-                        </>
-                    )
-                }
-            }
-            else {
-                return (
-                    <>
-                        <Search filterOptions = {['title', 'genres']} />
-                        <SearchResult movies = {this.props.fetchedMovies} action = {(movie: Movie) => this.handleSelectMovie(movie)}/>
-                    </>
-                );
-            }
-        }
-        
-        return (
-            <div className = 'App'>
-                <ConnectedRouter history={this.props.history}>
-                    <Switch>
-                        <Route exact path="/" >
-                            <Search filterOptions = {['title', 'genres']} />
-                            <NotFound />
-                        </Route>
-                        <Route path= "/search/">
-                            {getResult()}
-                        </Route>
-                        <Route path="/films/" >
-                            {getResult()}
-                        </Route>
-                        <Route path="*" >
-                            <Search filterOptions = {['title', 'genres']} />
-                            <NotFound />
-                        </Route>
-                    </Switch>
-                </ConnectedRouter>
-                <div className = 'footer'>
-                    <div className= 'footer-content'>Netflixroulette</div>
-                </div>
-            </div>
-        );
-    }
-}
+			<Switch>
+				<Route exact path="/" >
+					<Search filterOptions = {['title', 'genres']} />
+					<NotFound />
+				</Route>
+				<Route path= "/search/">
+					<Search filterOptions = {['title', 'genres']} />
+					{
+						store.pending &&
+						<Pending />
+					}
+					{
+						store.fetchedMovies.length !== 0 &&
+						<SearchResult
+							movies = {store.fetchedMovies}
+						/>
+					}
+					{
+						store.fetchedMovies.length === 0 &&
+						<NotFound />
+					}
+				</Route>
+				<Route path="/films/" >
+					{
+						store.currentMovie &&
+						<Route path={`/films/${store.currentMovie.id}`} >
+							<ShowMovieInfo
+								key = {store.currentMovie.key}
+								id = {store.currentMovie.id}
+								title = {store.currentMovie.title}
+								genres = {store.currentMovie.genres}
+								releaseDate = {store.currentMovie.releaseDate}
+								imageURL = {store.currentMovie.imageURL}
+								rating = {store.currentMovie.rating}
+								description = {store.currentMovie.description}
+								runtime = {store.currentMovie.runtime}
+							/>
+							<SearchResult
+								movies = {store.fetchedMovies}
+							/>
+						</Route>
+					}
+					{
+						!store.currentMovie && searchPathFragment &&
+						<Redirect to={`/search/${searchQuery}`} />
+					}
+					{
+						!store.currentMovie && !searchPathFragment && lastSearch &&
+						<Redirect to={`/search/${lastSearch}`} />
+					}
+					{
+						!store.currentMovie && !searchPathFragment && !lastSearch &&
+						<Redirect to={'/search'} />
+					}
+				</Route>
+				<Route path="*" >
+					<Search filterOptions = {['title', 'genres']} />
+					<NotFound />
+				</Route>
+			</Switch>
+			<div className = 'footer'>
+				<div className= 'footer-content'>{ 'Netflixroulette' }</div>
+			</div>
+		</div>
+	);
+};
 
-function mapStateToProps (state: AppState){
-    return {
-        fetchedMovies: state.fetchMovies.movies,
-        pending: state.fetchMovies.pending
-    }
-}
-
-export default connect(
-    mapStateToProps
-)(App);
+export default App;

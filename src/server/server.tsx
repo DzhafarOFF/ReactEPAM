@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-import { configureStore, history } from '../client/App/ConfigureStore';
+import { configureStore } from '../client/App/ConfigureStore';
 import { Provider } from "react-redux";
 import App from "../client/App/App";
 import { getMovies } from "../client/App/thunkAction/getMovies";
@@ -24,7 +24,7 @@ app.get('*', (req: Request, res: Response) => {
     getMovies('https://reactjs-cdp.herokuapp.com/movies')(store.dispatch, store.getState, null);
     const Root = (
         <Provider store={store}>
-            <App history={history}/>
+            <App />
         </Provider>
     )
     const htmlContent = renderToString(Root);
