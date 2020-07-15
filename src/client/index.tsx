@@ -1,5 +1,5 @@
 import App from './App/App';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -9,9 +9,9 @@ const store = configureStore();
 
 export const Root: React.FC = () =>
 	<Provider store={store}>
-		<BrowserRouter>
+		<HashRouter>
 			<App />
-		</BrowserRouter>
+		</HashRouter>
 	</Provider>
 ;
 
